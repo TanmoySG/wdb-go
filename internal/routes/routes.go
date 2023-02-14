@@ -7,6 +7,8 @@ type route string
 const basicEndpointFormat = "%s/api/%s"
 
 var (
+	ApiPing route = ""
+
 	LoginUser  route = "users/login"
 	CreateUser route = "users"
 	GrantRoles route = "users/grant"

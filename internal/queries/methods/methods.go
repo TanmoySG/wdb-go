@@ -5,6 +5,8 @@ import "net/http"
 type method string
 
 var (
+	ApiPing method = http.MethodGet
+
 	LoginUser  method = http.MethodGet
 	CreateUser method = http.MethodPost
 	GrantRoles method = http.MethodPost
