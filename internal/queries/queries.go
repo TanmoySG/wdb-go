@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/TanmoySG/wdb-go/internal/queries/response"
+	"github.com/TanmoySG/wdb-go/internal/response"
 )
 
 const (

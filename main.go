@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/queries"
-	"github.com/TanmoySG/wdb-go/internal/queries/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	// f "github.com/TanmoySG/wunderDB/pkg/fs"
 )
