@@ -13,7 +13,7 @@ var (
 )
 
 type Client interface {
-	LoginUser(username, password string) (*apiResponse.Response, error)
+	LoginUser(username, password string) (*int, *apiResponse.Response, error)
 }
 
 type wdbClient struct {

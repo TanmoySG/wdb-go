@@ -6,14 +6,19 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/routes"
 )
 
-func (wdb wdbClient) LoginUser(username, password string) (*apiResponse.Response, error) {
+func (wdb wdbClient) LoginUser(username, password string) (*int, *apiResponse.Response, error) {
 	queryEndpoint := routes.LoginUser.Format(wdb.ConnectionURI)
 	queryMethod := methods.LoginUser.String()
 
-	queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
+	queryResponseStatus, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return queryResponse.ApiResponse()
+	apiResponse, err := queryResponse.ApiResponse()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return queryResponseStatus, apiResponse, nil
 }
