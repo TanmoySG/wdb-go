@@ -21,6 +21,7 @@ const (
 )
 
 type queryResponse []byte
+type queryResponseStatus *int
 
 type QueryClient struct {
 	client         http.Client
@@ -46,16 +47,16 @@ func NewQueryClient(username, password, userAgent string) QueryClient {
 	return qc
 }
 
-func (qc QueryClient) Query(endpoint, method string, payload interface{}) (queryResponse, error) {
+func (qc QueryClient) Query(endpoint, method string, payload interface{}) (queryResponseStatus, queryResponse, error) {
 
 	requestBody, err := json.Marshal(payload)
 	if err != nil {
-		return nil, fmt.Errorf(queryErrorFormat, err)
+		return nil, nil, fmt.Errorf(queryErrorFormat, err)
 	}
 
 	request, err := http.NewRequest(method, endpoint, bytes.NewBuffer(requestBody))
 	if err != nil {
-		return nil, fmt.Errorf(queryErrorFormat, err)
+		return nil, nil, fmt.Errorf(queryErrorFormat, err)
 	}
 
 	// can change based on requirement - make it flexible
@@ -69,15 +70,15 @@ func (qc QueryClient) Query(endpoint, method string, payload interface{}) (query
 
 	response, err := qc.client.Do(request)
 	if err != nil {
-		return nil, fmt.Errorf(queryErrorFormat, err)
+		return nil, nil, fmt.Errorf(queryErrorFormat, err)
 	}
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
-		return nil, fmt.Errorf(responseErrorFormat, err)
+		return nil, nil, fmt.Errorf(responseErrorFormat, err)
 	}
 
-	return responseBody, nil
+	return &response.StatusCode, responseBody, nil
 }
 
 func (qr queryResponse) Map() (map[string]interface{}, error) {
