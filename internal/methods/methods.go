@@ -27,3 +27,7 @@ var (
 	FetchDatabase  method = http.MethodGet
 	DeleteDatabase method = http.MethodDelete
 )
+
+func (m method) String() string {
+	return string(m)
+}
