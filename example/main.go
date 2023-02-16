@@ -39,11 +39,11 @@ func main() {
 
 	// fmt.Print(g)
 
-	r, err := g.LoginUser(u, p)
+	sc, r, err := g.LoginUser(u, p)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Print(*r.Data)
+	fmt.Print(*r.Data, *sc)
 
 }
