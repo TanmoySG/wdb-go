@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/TanmoySG/wdb-go/internal/queries"
-	"github.com/TanmoySG/wdb-go/internal/response"
 	"github.com/TanmoySG/wdb-go/internal/version"
 )
 
@@ -13,7 +12,8 @@ var (
 )
 
 type Client interface {
-	LoginUser(username, password string) (*int, *apiResponse.Response, error)
+	LoginUser(username, password string) (bool, error)
+	CreateUser(username, password string) (bool, error)
 }
 
 type wdbClient struct {
