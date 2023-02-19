@@ -11,6 +11,9 @@ import (
 const (
 	failedLogin     = false
 	successfulLogin = true
+
+	failedCreateUser     = false
+	successfulCreateUser = true
 )
 
 func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
@@ -44,17 +47,42 @@ func (wdb wdbClient) CreateUser(username, password string) (bool, error) {
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
 	if err != nil {
-		return failedLogin, err
+		return failedCreateUser, err
 	}
 
 	apiResponse, err := queryResponse.ApiResponse()
 	if err != nil {
-		return failedLogin, err
+		return failedCreateUser, err
 	}
 
 	if apiResponse.IsSuccess() {
-		return successfulLogin, nil
+		return successfulCreateUser, nil
 	}
 
-	return failedLogin, fmt.Errorf(apiResponse.Error.Code)
+	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
 }
+
+// func (wdb wdbClient) GrantRoles(username, password string) (bool, error) {
+// 	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI)
+// 	queryMethod := methods.CreateUser.String()
+// 	queryPayload := models.CreateUser{
+// 		Username: username,
+// 		Password: password,
+// 	}
+
+// 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
+// 	if err != nil {
+// 		return failedCreateUser, err
+// 	}
+
+// 	apiResponse, err := queryResponse.ApiResponse()
+// 	if err != nil {
+// 		return failedCreateUser, err
+// 	}
+
+// 	if apiResponse.IsSuccess() {
+// 		return successfulCreateUser, nil
+// 	}
+
+// 	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
+// }
