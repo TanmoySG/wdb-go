@@ -5,6 +5,7 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/queries"
 	"github.com/TanmoySG/wdb-go/internal/version"
+	"github.com/TanmoySG/wdb-go/privileges"
 )
 
 var (
@@ -14,6 +15,7 @@ var (
 type Client interface {
 	LoginUser(username, password string) (bool, error)
 	CreateUser(username, password string) (bool, error)
+	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) (bool, error)
 }
 
 type wdbClient struct {

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	wdbgo "github.com/TanmoySG/wdb-go"
+	"github.com/TanmoySG/wdb-go/privileges"
 )
 
 // "log"
@@ -35,15 +36,34 @@ func main() {
 
 	appnme := "hyttt"
 
-	g := wdbgo.NewWdbClient(u, p, "http://localhost:8089", &appnme)
+	g := wdbgo.NewWdbClient(u, p, "http://localhost:8086", &appnme)
 
 	// fmt.Print(g)
 
-	sc, r, err := g.LoginUser(u, p)
+	// r, err := g.LoginUser(u, p)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// r, err := g.CreateUser(u, p)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	allowed := []privileges.Privilege{
+		privileges.AddData,
+		privileges.CreateCollection,
+	}
+
+	denied := []privileges.Privilege{
+		privileges.DeleteCollection,
+	}
+
+	r, err := g.CreateRole("xyz", allowed, denied)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Print(*r.Data, *sc)
+	fmt.Print(r)
 
 }
