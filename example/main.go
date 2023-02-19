@@ -1,55 +1,38 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	wdbgo "github.com/TanmoySG/wdb-go"
 	"github.com/TanmoySG/wdb-go/privileges"
 )
 
-// "log"
-
-// "github.com/TanmoySG/wdb-go/internal/methods"
-// "github.com/TanmoySG/wdb-go/internal/queries"
-// "github.com/TanmoySG/wdb-go/internal/routes"
-// f "github.com/TanmoySG/wunderDB/pkg/fs"
-
 func main() {
 
-	// rt := routes.ApiPing.Format("http://localhost:8089")
+	uname, pword := "admin", "admin"
+	appnme := "example-wdb-go-app"
+	wdbAddress := "http://localhost:8086"
 
-	// qc := queries.NewQueryClient("admin", "admin", "someone")
-	// re, err := qc.Query(rt, string(methods.ApiPing), nil)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	// create client
+	wdb := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
 
-	// r, err := re.ApiResponse()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	// login users
+	resp, err := wdb.LoginUser(uname, pword)
+	if err != nil {
+		log.Info(err)
+	} else {
+		log.Info(resp)
+	}
 
-	// fmt.Println(r.Action, *r.Data)
+	// create users
+	resp, err = wdb.CreateUser(uname, pword)
+	if err != nil {
+		log.Info(err)
+	} else {
+		log.Info(resp)
+	}
 
-	u, p := "admin", "admin"
-
-	appnme := "hyttt"
-
-	g := wdbgo.NewWdbClient(u, p, "http://localhost:8086", &appnme)
-
-	// fmt.Print(g)
-
-	// r, err := g.LoginUser(u, p)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// r, err := g.CreateUser(u, p)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
+	// privileges
 	allowed := []privileges.Privilege{
 		privileges.AddData,
 		privileges.CreateCollection,
@@ -59,11 +42,11 @@ func main() {
 		privileges.DeleteCollection,
 	}
 
-	r, err := g.CreateRole("xyz", allowed, denied)
+	resp, err = wdb.CreateRole("xyz", allowed, denied)
 	if err != nil {
-		log.Fatal(err)
+		log.Info(err)
+	} else {
+		log.Info(resp)
 	}
-
-	fmt.Print(r)
 
 }
