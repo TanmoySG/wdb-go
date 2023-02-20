@@ -19,17 +19,17 @@ func main() {
 	// login users
 	resp, err := wdb.LoginUser(uname, pword)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
 		log.Info(resp)
 	}
 
 	// create users
-	resp, err = wdb.CreateUser(uname, pword)
+	err = wdb.CreateUser(uname, pword)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
-		log.Info(resp)
+		log.Info("created user")
 	}
 
 	// privileges
@@ -42,11 +42,18 @@ func main() {
 		privileges.DeleteCollection,
 	}
 
-	resp, err = wdb.CreateRole("xyz", allowed, denied)
+	err = wdb.CreateRole("xyz", allowed, denied)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
-		log.Info(resp)
+		log.Info("created role")
+	}
+
+	err = wdb.GrantRoles(uname, "xyz", "databadse")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("granted role")
 	}
 
 }
