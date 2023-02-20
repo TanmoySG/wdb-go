@@ -6,6 +6,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
+	"github.com/TanmoySG/wunderDB/model"
 )
 
 const (
@@ -37,7 +38,7 @@ func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
 	return failedLogin, fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) CreateUser(username, password string) (bool, error) {
+func (wdb wdbClient) CreateUser(username, password string) error {
 	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI)
 	queryMethod := methods.CreateUser.String()
 	queryPayload := models.CreateUser{
@@ -47,42 +48,59 @@ func (wdb wdbClient) CreateUser(username, password string) (bool, error) {
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	apiResponse, err := queryResponse.ApiResponse()
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	if apiResponse.IsSuccess() {
-		return successfulCreateUser, nil
+		return nil
 	}
 
-	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
+	return fmt.Errorf(apiResponse.Error.Code)
 }
 
-// func (wdb wdbClient) GrantRoles(username, password string) (bool, error) {
-// 	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI)
-// 	queryMethod := methods.CreateUser.String()
-// 	queryPayload := models.CreateUser{
-// 		Username: username,
-// 		Password: password,
-// 	}
+func (wdb wdbClient) GrantRoles(username, role string, entities ...string) error {
+	var targetDatabase, targetCollection *string
 
-// 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
-// 	if err != nil {
-// 		return failedCreateUser, err
-// 	}
+	entitiesCount := len(entities)
+	if entitiesCount == 1 {
+		targetDatabase = &entities[0]
+	} else if entitiesCount == 2 {
+		targetCollection = &entities[1]
+	} else {
+		return fmt.Errorf("entities missing: database or collection")
+	}
 
-// 	apiResponse, err := queryResponse.ApiResponse()
-// 	if err != nil {
-// 		return failedCreateUser, err
-// 	}
+	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI)
+	queryMethod := methods.GrantRoles.String()
+	queryPayload := models.GrantRoles{
+		Username: username,
+		Permission: model.Permissions{
+			Role: model.Identifier(role),
+			On: &model.Entities{
+				Databases:   targetDatabase,
+				Collections: targetCollection,
+			},
+		},
+	}
 
-// 	if apiResponse.IsSuccess() {
-// 		return successfulCreateUser, nil
-// 	}
+	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
+	if err != nil {
+		return err
+	}
 
-// 	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
-// }
+	apiResponse, err := queryResponse.ApiResponse()
+	if err != nil {
+		return err
+	}
+
+	if apiResponse.IsSuccess() {
+		return nil
+	}
+
+	return fmt.Errorf(apiResponse.Error.Code)
+}
