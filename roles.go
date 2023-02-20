@@ -9,7 +9,7 @@ import (
 	"github.com/TanmoySG/wdb-go/privileges"
 )
 
-func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) (bool, error) {
+func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error {
 	var allowed, denied []string
 
 	for _, allowedPrivilege := range allowedPrivileges {
@@ -30,17 +30,17 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	apiResponse, err := queryResponse.ApiResponse()
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	if apiResponse.IsSuccess() {
-		return successfulCreateUser, nil
+		return nil
 	}
 
-	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
+	return fmt.Errorf(apiResponse.Error.Code)
 }
