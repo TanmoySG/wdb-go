@@ -12,9 +12,6 @@ import (
 const (
 	failedLogin     = false
 	successfulLogin = true
-
-	failedCreateUser     = false
-	successfulCreateUser = true
 )
 
 func (wdb wdbClient) LoginUser(username, password string) (bool, error) {

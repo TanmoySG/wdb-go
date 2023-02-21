@@ -6,6 +6,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/queries"
 	"github.com/TanmoySG/wdb-go/internal/version"
 	"github.com/TanmoySG/wdb-go/privileges"
+	"github.com/TanmoySG/wunderDB/model"
 )
 
 var (
@@ -14,9 +15,11 @@ var (
 
 type Client interface {
 	LoginUser(username, password string) (bool, error)
-	CreateUser(username, password string) ( error)
-	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) ( error)
-	GrantRoles(username, role string, entities ...string) ( error)
+	CreateUser(username, password string) error
+
+	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error
+	GrantRoles(username, role string, entities ...string) error
+	ListRoles() (map[string]model.Role, error)
 }
 
 type wdbClient struct {
