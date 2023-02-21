@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 
 	wdbgo "github.com/TanmoySG/wdb-go"
@@ -61,10 +63,10 @@ func main() {
 		log.Error(err)
 	} else {
 		res := []string{}
-		for roleName, _ := range rolesList {
+		for roleName := range rolesList {
 			res = append(res, roleName)
 		}
-		log.Infof("%v", res)
+		log.Infof("[ %s ]", strings.Join(res, " , "))
 	}
 
 	err = wdb.CreateDatabase("test-database")
@@ -73,4 +75,13 @@ func main() {
 	} else {
 		log.Info("created db")
 	}
+
+	db, err := wdb.GetDatabase("test-database")
+	if err != nil {
+		log.Error(err)
+	} else {
+
+		log.Infof("Collections [ %s ]", db.Collections)
+	}
+
 }

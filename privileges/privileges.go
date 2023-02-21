@@ -42,4 +42,3 @@ func createPrivilege(privilege, description string) Privilege {
 func (p Privilege) Name() string {
 	return p.privilege
 }
-
