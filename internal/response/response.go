@@ -1,5 +1,10 @@
 package apiResponse
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 const (
 	StatusSuccess = "success"
 	StatusFailure = "failure"
@@ -28,4 +33,12 @@ func (r Response) IsSuccess() bool {
 	default:
 		return false
 	}
+}
+
+func (r Response) MarshalData() ([]byte, error) {
+	dataByteArray, err := json.Marshal(r.Data)
+	if err != nil {
+		return nil, fmt.Errorf("error marshalling data map : %s", err)
+	}
+	return dataByteArray, nil
 }
