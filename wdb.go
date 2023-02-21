@@ -20,6 +20,8 @@ type Client interface {
 	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error
 	GrantRoles(username, role string, entities ...string) error
 	ListRoles() (map[string]model.Role, error)
+
+	CreateDatabase(databaseName string) error
 }
 
 type wdbClient struct {
