@@ -49,12 +49,12 @@ func main() {
 		log.Info("created role")
 	}
 
-	err = wdb.GrantRoles(uname, "xyz", "databadse")
-	if err != nil {
-		log.Error(err)
-	} else {
-		log.Info("granted role")
-	}
+	// err = wdb.GrantRoles(uname, "xyz", "databadse")
+	// if err != nil {
+	// 	log.Error(err)
+	// } else {
+	// 	log.Info("granted role")
+	// }
 
 	rolesList, err := wdb.ListRoles()
 	if err != nil {
@@ -65,5 +65,12 @@ func main() {
 			res = append(res, roleName)
 		}
 		log.Infof("%v", res)
+	}
+
+	err = wdb.CreateDatabase("test-database")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("created db")
 	}
 }
