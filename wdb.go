@@ -22,6 +22,7 @@ type Client interface {
 	ListRoles() (map[string]model.Role, error)
 
 	CreateDatabase(databaseName string) error
+	GetDatabase(databaseName string) (*model.Database, error)
 }
 
 type wdbClient struct {
