@@ -80,8 +80,16 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	} else {
-
 		log.Infof("Collections [ %s ]", db.Collections)
 	}
 
+	err = wdb.DeleteDatabase("databadse")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("database deleted")
+	}
+
 }
+
+//databadse
