@@ -56,4 +56,14 @@ func main() {
 		log.Info("granted role")
 	}
 
+	rolesList, err := wdb.ListRoles()
+	if err != nil {
+		log.Error(err)
+	} else {
+		res := []string{}
+		for roleName, _ := range rolesList {
+			res = append(res, roleName)
+		}
+		log.Infof("%v", res)
+	}
 }
