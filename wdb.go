@@ -23,6 +23,7 @@ type Client interface {
 
 	CreateDatabase(databaseName string) error
 	GetDatabase(databaseName string) (*model.Database, error)
+	DeleteDatabase(databaseName string) error
 }
 
 type wdbClient struct {
