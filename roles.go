@@ -1,15 +1,17 @@
 package wdbgo
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
 	"github.com/TanmoySG/wdb-go/privileges"
+	"github.com/TanmoySG/wunderDB/model"
 )
 
-func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) (bool, error) {
+func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error {
 	var allowed, denied []string
 
 	for _, allowedPrivilege := range allowedPrivileges {
@@ -30,17 +32,50 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	apiResponse, err := queryResponse.ApiResponse()
 	if err != nil {
-		return failedCreateUser, err
+		return err
 	}
 
 	if apiResponse.IsSuccess() {
-		return successfulCreateUser, nil
+		return nil
 	}
 
-	return failedCreateUser, fmt.Errorf(apiResponse.Error.Code)
+	return fmt.Errorf(apiResponse.Error.Code)
+}
+
+func (wdb wdbClient) ListRoles() (map[string]model.Role, error) {
+
+	queryEndpoint := routes.ListRoles.Format(wdb.ConnectionURI)
+	queryMethod := methods.ListRoles.String()
+
+	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	apiResponse, err := queryResponse.ApiResponse()
+	if err != nil {
+		return nil, err
+	}
+
+	if apiResponse.IsSuccess() {
+		var rolesList map[string]model.Role
+		dataBytes, err := apiResponse.MarshalData()
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(dataBytes, &rolesList)
+		if err != nil {
+			return nil, err
+		}
+
+		return rolesList, nil
+	}
+
+	return nil, fmt.Errorf(apiResponse.Error.Code)
 }

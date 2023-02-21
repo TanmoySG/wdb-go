@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 
 	wdbgo "github.com/TanmoySG/wdb-go"
@@ -19,17 +21,17 @@ func main() {
 	// login users
 	resp, err := wdb.LoginUser(uname, pword)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
 		log.Info(resp)
 	}
 
 	// create users
-	resp, err = wdb.CreateUser(uname, pword)
+	err = wdb.CreateUser(uname, pword)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
-		log.Info(resp)
+		log.Info("created user")
 	}
 
 	// privileges
@@ -42,11 +44,50 @@ func main() {
 		privileges.DeleteCollection,
 	}
 
-	resp, err = wdb.CreateRole("xyz", allowed, denied)
+	err = wdb.CreateRole("xyz", allowed, denied)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 	} else {
-		log.Info(resp)
+		log.Info("created role")
+	}
+
+	// err = wdb.GrantRoles(uname, "xyz", "databadse")
+	// if err != nil {
+	// 	log.Error(err)
+	// } else {
+	// 	log.Info("granted role")
+	// }
+
+	rolesList, err := wdb.ListRoles()
+	if err != nil {
+		log.Error(err)
+	} else {
+		res := []string{}
+		for roleName := range rolesList {
+			res = append(res, roleName)
+		}
+		log.Infof("[ %s ]", strings.Join(res, " , "))
+	}
+
+	err = wdb.CreateDatabase("test-database")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("created db")
+	}
+
+	db, err := wdb.GetDatabase("test-database")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Infof("Collections [ %s ]", db.Collections)
+	}
+
+	err = wdb.DeleteDatabase("databadse")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("database deleted")
 	}
 
 }
