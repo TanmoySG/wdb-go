@@ -7,7 +7,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
-	"github.com/TanmoySG/wunderDB/model"
+	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 func (wdb wdbClient) CreateDatabase(databaseName string) error {
@@ -34,7 +34,7 @@ func (wdb wdbClient) CreateDatabase(databaseName string) error {
 	return fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) GetDatabase(databaseName string) (*model.Database, error) {
+func (wdb wdbClient) GetDatabase(databaseName string) (*wdbModels.Database, error) {
 	queryEndpoint := routes.FetchDatabase.Format(wdb.ConnectionURI, databaseName)
 	queryMethod := methods.FetchDatabase.String()
 
@@ -49,7 +49,7 @@ func (wdb wdbClient) GetDatabase(databaseName string) (*model.Database, error) {
 	}
 
 	if apiResponse.IsSuccess() {
-		var database model.Database
+		var database wdbModels.Database
 		dataBytes, err := apiResponse.MarshalData()
 		if err != nil {
 			return nil, err

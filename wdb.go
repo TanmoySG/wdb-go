@@ -7,7 +7,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/version"
 	"github.com/TanmoySG/wdb-go/privileges"
 	"github.com/TanmoySG/wdb-go/schema"
-	"github.com/TanmoySG/wunderDB/model"
+	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 var (
@@ -20,10 +20,10 @@ type Client interface {
 
 	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error
 	GrantRoles(username, role string, entities ...string) error
-	ListRoles() (map[string]model.Role, error)
+	ListRoles() (map[string]wdbModels.Role, error)
 
 	CreateDatabase(databaseName string) error
-	GetDatabase(databaseName string) (*model.Database, error)
+	GetDatabase(databaseName string) (*wdbModels.Database, error)
 	DeleteDatabase(databaseName string) error
 
 	CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error

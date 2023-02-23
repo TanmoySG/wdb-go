@@ -6,7 +6,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
-	"github.com/TanmoySG/wunderDB/model"
+	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 const (
@@ -76,9 +76,9 @@ func (wdb wdbClient) GrantRoles(username, role string, entities ...string) error
 	queryMethod := methods.GrantRoles.String()
 	queryPayload := models.GrantRoles{
 		Username: username,
-		Permission: model.Permissions{
-			Role: model.Identifier(role),
-			On: &model.Entities{
+		Permission: wdbModels.Permissions{
+			Role: wdbModels.Identifier(role),
+			On: &wdbModels.Entities{
 				Databases:   targetDatabase,
 				Collections: targetCollection,
 			},
