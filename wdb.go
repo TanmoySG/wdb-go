@@ -6,6 +6,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/queries"
 	"github.com/TanmoySG/wdb-go/internal/version"
 	"github.com/TanmoySG/wdb-go/privileges"
+	"github.com/TanmoySG/wdb-go/schema"
 	"github.com/TanmoySG/wunderDB/model"
 )
 
@@ -24,6 +25,8 @@ type Client interface {
 	CreateDatabase(databaseName string) error
 	GetDatabase(databaseName string) (*model.Database, error)
 	DeleteDatabase(databaseName string) error
+
+	CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error
 }
 
 type wdbClient struct {
