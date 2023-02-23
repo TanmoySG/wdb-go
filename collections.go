@@ -68,3 +68,24 @@ func (wdb wdbClient) GetCollection(databaseName, collectionName string) (*wdbMod
 
 	return nil, fmt.Errorf(apiResponse.Error.Code)
 }
+
+func (wdb wdbClient) DeleteCollection(databaseName, collectionName string) error {
+	queryEndpoint := routes.DeleteCollection.Format(wdb.ConnectionURI, databaseName, collectionName)
+	queryMethod := methods.DeleteCollection.String()
+
+	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
+	if err != nil {
+		return err
+	}
+
+	apiResponse, err := queryResponse.ApiResponse()
+	if err != nil {
+		return err
+	}
+
+	if apiResponse.IsSuccess() {
+		return nil
+	}
+
+	return fmt.Errorf(apiResponse.Error.Code)
+}
