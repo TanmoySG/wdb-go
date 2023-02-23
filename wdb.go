@@ -27,6 +27,7 @@ type Client interface {
 	DeleteDatabase(databaseName string) error
 
 	CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error
+	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 }
 
 type wdbClient struct {
