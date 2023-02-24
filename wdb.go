@@ -3,7 +3,9 @@ package wdbgo
 import (
 	"fmt"
 
+	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/queries"
+	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/internal/version"
 	"github.com/TanmoySG/wdb-go/privileges"
 	"github.com/TanmoySG/wdb-go/schema"
@@ -15,6 +17,8 @@ var (
 )
 
 type Client interface {
+	Ping() (bool, error)
+
 	LoginUser(username, password string) (bool, error)
 	CreateUser(username, password string) error
 
@@ -43,8 +47,14 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, ConnectionURI string, projectId *string) Client {
+func NewWdbClient(username, password, ConnectionURI string, projectId *string) (Client, error) {
 	ua := createUserAgent(projectId)
+
+	ok := testConnection(routes.ApiPing.Format(ConnectionURI), methods.ApiPing.String(), username, password)
+	if !ok {
+		return nil, fmt.Errorf("error creating wdb-client: connection failed")
+	}
+
 	return wdbClient{
 		Username:      username,
 		Password:      password,
@@ -53,7 +63,7 @@ func NewWdbClient(username, password, ConnectionURI string, projectId *string) C
 			UserAgent: ua,
 		},
 		QueryClient: queries.NewQueryClient(username, password, ua),
-	}
+	}, nil
 }
 
 func createUserAgent(projectId *string) string {
@@ -61,4 +71,31 @@ func createUserAgent(projectId *string) string {
 		return fmt.Sprintf("%s.projectId-%s", userAgent, *projectId)
 	}
 	return userAgent
+}
+
+func (wdb wdbClient) Ping() (bool, error) {
+	queryEndpoint := routes.ApiPing.Format(wdb.ConnectionURI)
+	queryMethod := methods.ApiPing.String()
+
+	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
+	if err != nil {
+		return false, err
+	}
+
+	apiResponse, err := queryResponse.ApiResponse()
+	if err != nil {
+		return false, err
+	}
+
+	if apiResponse.IsSuccess() {
+		return true, nil
+	}
+
+	return false, fmt.Errorf(apiResponse.Error.Code)
+}
+
+func testConnection(url, method, username, password string) bool {
+	qc := queries.NewQueryClient(username, password, "")
+	_, _, err := qc.Query(url, method, nil)
+	return err == nil
 }
