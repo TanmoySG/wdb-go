@@ -2,6 +2,7 @@ package wdbgo
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/queries"
@@ -50,7 +51,7 @@ type wdbClientMetadata struct {
 func NewWdbClient(username, password, ConnectionURI string, projectId *string) (Client, error) {
 	ua := createUserAgent(projectId)
 
-	ok := testConnection(routes.ApiPing.Format(ConnectionURI), methods.ApiPing.String(), username, password)
+	ok := testConnection(routes.ApiPing.Format(ConnectionURI))
 	if !ok {
 		return nil, fmt.Errorf("error creating wdb-client: connection failed")
 	}
@@ -94,8 +95,10 @@ func (wdb wdbClient) Ping() (bool, error) {
 	return false, fmt.Errorf(apiResponse.Error.Code)
 }
 
-func testConnection(url, method, username, password string) bool {
-	qc := queries.NewQueryClient(username, password, "")
-	_, _, err := qc.Query(url, method, nil)
-	return err == nil
+func testConnection(url string) bool {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err == nil
+	}
+	return resp.StatusCode == http.StatusOK
 }
