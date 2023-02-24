@@ -17,7 +17,10 @@ func main() {
 	wdbAddress := "http://localhost:8086"
 
 	// create client
-	wdb := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
+	wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	resp, err := wdb.LoginUser(uname, pword)
 	if err != nil {
