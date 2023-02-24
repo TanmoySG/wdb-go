@@ -7,14 +7,17 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
+	"github.com/TanmoySG/wdb-go/schema"
+
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
-func (wdb wdbClient) CreateDatabase(databaseName string) error {
-	queryEndpoint := routes.CreateDatabase.Format(wdb.ConnectionURI)
-	queryMethod := methods.CreateDatabase.String()
-	queryPayload := models.CreateDatabase{
-		Name: databaseName,
+func (wdb wdbClient) CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error {
+	queryEndpoint := routes.CreateCollection.Format(wdb.ConnectionURI, databaseName)
+	queryMethod := methods.CreateCollection.String()
+	queryPayload := models.CreateCollection{
+		Name:   collectionName,
+		Schema: schema,
 	}
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, queryPayload)
@@ -34,9 +37,9 @@ func (wdb wdbClient) CreateDatabase(databaseName string) error {
 	return fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) GetDatabase(databaseName string) (*wdbModels.Database, error) {
-	queryEndpoint := routes.FetchDatabase.Format(wdb.ConnectionURI, databaseName)
-	queryMethod := methods.FetchDatabase.String()
+func (wdb wdbClient) GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error) {
+	queryEndpoint := routes.FetchCollection.Format(wdb.ConnectionURI, databaseName, collectionName)
+	queryMethod := methods.FetchCollection.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
 	if err != nil {
@@ -49,26 +52,26 @@ func (wdb wdbClient) GetDatabase(databaseName string) (*wdbModels.Database, erro
 	}
 
 	if apiResponse.IsSuccess() {
-		var database wdbModels.Database
+		var collection wdbModels.Collection
 		dataBytes, err := apiResponse.MarshalData()
 		if err != nil {
 			return nil, err
 		}
 
-		err = json.Unmarshal(dataBytes, &database)
+		err = json.Unmarshal(dataBytes, &collection)
 		if err != nil {
 			return nil, err
 		}
 
-		return &database, nil
+		return &collection, nil
 	}
 
 	return nil, fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) DeleteDatabase(databaseName string) error {
-	queryEndpoint := routes.DeleteDatabase.Format(wdb.ConnectionURI, databaseName)
-	queryMethod := methods.DeleteDatabase.String()
+func (wdb wdbClient) DeleteCollection(databaseName, collectionName string) error {
+	queryEndpoint := routes.DeleteCollection.Format(wdb.ConnectionURI, databaseName, collectionName)
+	queryMethod := methods.DeleteCollection.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
 	if err != nil {

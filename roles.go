@@ -8,7 +8,7 @@ import (
 	"github.com/TanmoySG/wdb-go/internal/routes"
 	"github.com/TanmoySG/wdb-go/models"
 	"github.com/TanmoySG/wdb-go/privileges"
-	"github.com/TanmoySG/wunderDB/model"
+	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error {
@@ -47,7 +47,7 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 	return fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) ListRoles() (map[string]model.Role, error) {
+func (wdb wdbClient) ListRoles() (map[string]wdbModels.Role, error) {
 
 	queryEndpoint := routes.ListRoles.Format(wdb.ConnectionURI)
 	queryMethod := methods.ListRoles.String()
@@ -63,7 +63,7 @@ func (wdb wdbClient) ListRoles() (map[string]model.Role, error) {
 	}
 
 	if apiResponse.IsSuccess() {
-		var rolesList map[string]model.Role
+		var rolesList map[string]wdbModels.Role
 		dataBytes, err := apiResponse.MarshalData()
 		if err != nil {
 			return nil, err

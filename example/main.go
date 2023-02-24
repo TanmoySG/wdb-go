@@ -7,6 +7,7 @@ import (
 
 	wdbgo "github.com/TanmoySG/wdb-go"
 	"github.com/TanmoySG/wdb-go/privileges"
+	"github.com/TanmoySG/wdb-go/schema"
 )
 
 func main() {
@@ -16,9 +17,13 @@ func main() {
 	wdbAddress := "http://localhost:8086"
 
 	// create client
-	wdb := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
+	// wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme) // run connection check
+	wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme, wdbgo.SkipConnectionCheck) // skip connection check
 
-	// login users
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	resp, err := wdb.LoginUser(uname, pword)
 	if err != nil {
 		log.Error(err)
@@ -51,12 +56,12 @@ func main() {
 		log.Info("created role")
 	}
 
-	// err = wdb.GrantRoles(uname, "xyz", "databadse")
-	// if err != nil {
-	// 	log.Error(err)
-	// } else {
-	// 	log.Info("granted role")
-	// }
+	err = wdb.GrantRoles(uname, "xyz", "databadse")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("granted role")
+	}
 
 	rolesList, err := wdb.ListRoles()
 	if err != nil {
@@ -90,4 +95,36 @@ func main() {
 		log.Info("database deleted")
 	}
 
+	s, err := schema.LoadSchemaFromFile("example/schema-sample.json")
+	if err != nil {
+		log.Error(err)
+	}
+
+	err = wdb.CreateCollection("test-database", "collection-1", s)
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("collection created")
+	}
+
+	coll, err := wdb.GetCollection("test-database", "collection-1")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Infof("Schema : %s", coll.Schema)
+	}
+
+	err = wdb.DeleteCollection("test-database", "collection-1")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Info("collection deleted")
+	}
+
+	coll, err = wdb.GetCollection("test-database", "collection-1")
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Infof("Schema : %s", coll.Schema)
+	}
 }
