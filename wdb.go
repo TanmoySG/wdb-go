@@ -13,6 +13,8 @@ import (
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
+const SkipConnectionCheck = false
+
 var (
 	userAgent = fmt.Sprintf("wdb-go.client-library-%s", version.Version)
 )
@@ -48,12 +50,18 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, ConnectionURI string, projectId *string) (Client, error) {
+func NewWdbClient(username, password, ConnectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
-	ok := testConnection(routes.ApiPing.Format(ConnectionURI))
-	if !ok {
-		return nil, fmt.Errorf("error creating wdb-client: connection failed")
+	if len(args) == 0 {
+		args = append(args, !SkipConnectionCheck)
+	}
+
+	if args[0] {
+		ok := testConnection(routes.ApiPing.Format(ConnectionURI))
+		if !ok {
+			return nil, fmt.Errorf("error creating wdb-client: connection failed")
+		}
 	}
 
 	return wdbClient{
