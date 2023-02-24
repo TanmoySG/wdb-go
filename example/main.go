@@ -17,7 +17,9 @@ func main() {
 	wdbAddress := "http://localhost:8086"
 
 	// create client
-	wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
+	// wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme)
+	wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appnme, wdbgo.SkipConnectionCheck)
+
 	if err != nil {
 		log.Fatal(err)
 	}
