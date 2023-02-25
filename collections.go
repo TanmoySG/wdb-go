@@ -13,7 +13,7 @@ import (
 )
 
 func (wdb wdbClient) CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error {
-	queryEndpoint := routes.CreateCollection.Format(wdb.ConnectionURI, databaseName)
+	queryEndpoint := routes.CreateCollection.Format(wdb.ConnectionURI, databaseName).String()
 	queryMethod := methods.CreateCollection.String()
 	queryPayload := models.CreateCollection{
 		Name:   collectionName,
@@ -38,7 +38,7 @@ func (wdb wdbClient) CreateCollection(databaseName, collectionName string, schem
 }
 
 func (wdb wdbClient) GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error) {
-	queryEndpoint := routes.FetchCollection.Format(wdb.ConnectionURI, databaseName, collectionName)
+	queryEndpoint := routes.FetchCollection.Format(wdb.ConnectionURI, databaseName, collectionName).String()
 	queryMethod := methods.FetchCollection.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
@@ -70,7 +70,7 @@ func (wdb wdbClient) GetCollection(databaseName, collectionName string) (*wdbMod
 }
 
 func (wdb wdbClient) DeleteCollection(databaseName, collectionName string) error {
-	queryEndpoint := routes.DeleteCollection.Format(wdb.ConnectionURI, databaseName, collectionName)
+	queryEndpoint := routes.DeleteCollection.Format(wdb.ConnectionURI, databaseName, collectionName).String()
 	queryMethod := methods.DeleteCollection.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)

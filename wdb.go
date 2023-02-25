@@ -53,7 +53,7 @@ type wdbClientMetadata struct {
 func NewWdbClient(username, password, ConnectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
-	ok := testConnection(routes.ApiPing.Format(ConnectionURI), args...)
+	ok := testConnection(routes.ApiPing.Format(ConnectionURI).String(), args...)
 	if !ok {
 		return nil, fmt.Errorf("error creating wdb-client: connection failed")
 	}
@@ -77,7 +77,7 @@ func createUserAgent(projectId *string) string {
 }
 
 func (wdb wdbClient) Ping() (bool, error) {
-	queryEndpoint := routes.ApiPing.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.ApiPing.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.ApiPing.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)

@@ -15,7 +15,7 @@ const (
 )
 
 func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
-	queryEndpoint := routes.LoginUser.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.LoginUser.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.LoginUser.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
@@ -36,7 +36,7 @@ func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
 }
 
 func (wdb wdbClient) CreateUser(username, password string) error {
-	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateUser.String()
 	queryPayload := models.CreateUser{
 		Username: username,
@@ -72,7 +72,7 @@ func (wdb wdbClient) GrantRoles(username, role string, entities ...string) error
 		return fmt.Errorf("entities missing: database or collection")
 	}
 
-	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.GrantRoles.String()
 	queryPayload := models.GrantRoles{
 		Username: username,

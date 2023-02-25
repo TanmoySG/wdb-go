@@ -22,7 +22,7 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 		denied = append(denied, deniedPrivilege.Name())
 	}
 
-	queryEndpoint := routes.CreateRole.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.CreateRole.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateRole.String()
 	queryPayload := models.CreateRole{
 		Role:    roleName,
@@ -48,8 +48,7 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 }
 
 func (wdb wdbClient) ListRoles() (map[string]wdbModels.Role, error) {
-
-	queryEndpoint := routes.ListRoles.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.ListRoles.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.ListRoles.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
