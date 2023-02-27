@@ -68,6 +68,9 @@ func (qc QueryClient) Query(endpoint, method string, payload interface{}) (query
 	// Content Type
 	request.Header.Set(contentTypeHeader, contentType)
 
+	// Accept Content type
+	request.Header.Add("Accept", contentType)
+
 	response, err := qc.client.Do(request)
 	if err != nil {
 		return nil, nil, fmt.Errorf(queryErrorFormat, err)

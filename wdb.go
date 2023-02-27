@@ -50,18 +50,18 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, ConnectionURI string, projectId *string, args ...bool) (Client, error) {
+func NewWdbClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
-	ok := testConnection(routes.ApiPing.Format(ConnectionURI).String(), args...)
+	ok := testConnection(routes.ApiPing.Format(connectionURI).String(), args...)
 	if !ok {
-		return nil, fmt.Errorf("error creating wdb-client: connection failed")
+		return nil, fmt.Errorf("error creating wdb-client: failed to establish connection with %s", connectionURI)
 	}
 
 	return wdbClient{
 		Username:      username,
 		Password:      password,
-		ConnectionURI: ConnectionURI,
+		ConnectionURI: connectionURI,
 		Metadata: wdbClientMetadata{
 			UserAgent: ua,
 		},
@@ -99,7 +99,7 @@ func (wdb wdbClient) Ping() (bool, error) {
 
 func testConnection(url string, args ...bool) bool {
 	shouldCheck := !SkipConnectionCheck
-	
+
 	if len(args) != 0 {
 		shouldCheck = args[0]
 	}
