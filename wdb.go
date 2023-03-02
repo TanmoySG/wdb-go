@@ -36,6 +36,8 @@ type Client interface {
 	CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error
 	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 	DeleteCollection(databaseName, collectionName string) error
+
+	AddData(data any, databaseName, collectionName string, args ...interface{}) error 
 }
 
 type wdbClient struct {
