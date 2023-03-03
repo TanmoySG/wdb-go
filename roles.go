@@ -6,8 +6,8 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	"github.com/TanmoySG/wdb-go/models"
 	"github.com/TanmoySG/wdb-go/privileges"
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
@@ -24,7 +24,7 @@ func (wdb wdbClient) CreateRole(roleName string, allowedPrivileges, deniedPrivil
 
 	queryEndpoint := routes.CreateRole.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateRole.String()
-	queryPayload := models.CreateRole{
+	queryPayload := requestModels.CreateRole{
 		Role:    roleName,
 		Allowed: allowed,
 		Denied:  denied,

@@ -6,7 +6,7 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	"github.com/TanmoySG/wdb-go/models"
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	"github.com/TanmoySG/wdb-go/schema"
 
 	wdbModels "github.com/TanmoySG/wunderDB/model"
@@ -15,7 +15,7 @@ import (
 func (wdb wdbClient) CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error {
 	queryEndpoint := routes.CreateCollection.Format(wdb.ConnectionURI, databaseName).String()
 	queryMethod := methods.CreateCollection.String()
-	queryPayload := models.CreateCollection{
+	queryPayload := requestModels.CreateCollection{
 		Name:   collectionName,
 		Schema: schema,
 	}

@@ -6,14 +6,14 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	"github.com/TanmoySG/wdb-go/models"
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 func (wdb wdbClient) CreateDatabase(databaseName string) error {
 	queryEndpoint := routes.CreateDatabase.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateDatabase.String()
-	queryPayload := models.CreateDatabase{
+	queryPayload := requestModels.CreateDatabase{
 		Name: databaseName,
 	}
 

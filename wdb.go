@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	dataFilters "github.com/TanmoySG/wdb-go/filters"
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/queries"
 	"github.com/TanmoySG/wdb-go/internal/routes"
@@ -37,7 +38,8 @@ type Client interface {
 	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 	DeleteCollection(databaseName, collectionName string) error
 
-	AddData(data any, databaseName, collectionName string, args ...interface{}) error 
+	AddData(data any, databaseName, collectionName string, args ...interface{}) error
+	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (*interface{}, error)
 }
 
 type wdbClient struct {
