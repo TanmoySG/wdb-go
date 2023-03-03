@@ -1,4 +1,4 @@
-package models
+package requestModels
 
 import "github.com/TanmoySG/wdb-go/schema"
 
