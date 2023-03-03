@@ -39,7 +39,7 @@ type Client interface {
 	DeleteCollection(databaseName, collectionName string) error
 
 	AddData(data any, databaseName, collectionName string, args ...interface{}) error
-	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (*interface{}, error)
+	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (dataRecords, error)
 }
 
 type wdbClient struct {
