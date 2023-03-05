@@ -5,7 +5,7 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	"github.com/TanmoySG/wdb-go/models"
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
@@ -15,7 +15,7 @@ const (
 )
 
 func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
-	queryEndpoint := routes.LoginUser.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.LoginUser.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.LoginUser.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
@@ -36,9 +36,9 @@ func (wdb wdbClient) LoginUser(username, password string) (bool, error) {
 }
 
 func (wdb wdbClient) CreateUser(username, password string) error {
-	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.CreateUser.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateUser.String()
-	queryPayload := models.CreateUser{
+	queryPayload := requestModels.CreateUser{
 		Username: username,
 		Password: password,
 	}
@@ -72,9 +72,9 @@ func (wdb wdbClient) GrantRoles(username, role string, entities ...string) error
 		return fmt.Errorf("entities missing: database or collection")
 	}
 
-	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.GrantRoles.String()
-	queryPayload := models.GrantRoles{
+	queryPayload := requestModels.GrantRoles{
 		Username: username,
 		Permission: wdbModels.Permissions{
 			Role: wdbModels.Identifier(role),

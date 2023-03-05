@@ -116,12 +116,80 @@ func Test_Format(t *testing.T) {
 		var formatResult string
 
 		if len(tc.endpointArgs) == 0 || tc.endpointArgs == nil {
+			formatResult = tc.route.Format(tc.baseUrl).String()
+		} else {
+			formatResult = tc.route.Format(tc.baseUrl, tc.endpointArgs...).String()
+		}
+
+		assert.Equal(t, tc.expectedFormattedURL, formatResult)
+	}
+
+}
+
+func Test_AddQueryParams(t *testing.T) {
+	type testCase struct {
+		baseUrl                             string
+		route                               route
+		endpointArgs                        []interface{}
+		expectedFormattedURL                string
+		queryFormat                         string
+		queryParams                         []interface{}
+		expectedFormattedUrlWithQueryParams string
+	}
+
+	testCases := []testCase{
+		{
+			baseUrl:                             baseUrl,
+			route:                               AddData,
+			endpointArgs:                        []interface{}{"database", "collection"},
+			expectedFormattedURL:                baseUrl + "/api/" + expectedDataEndpoints + "/data",
+			queryFormat:                         "key=%s&value=%s",
+			queryParams:                         []interface{}{"key", "value"},
+			expectedFormattedUrlWithQueryParams: baseUrl + "/api/" + expectedDataEndpoints + "/data" + "?key=key&value=value",
+		},
+		{
+			baseUrl:                             baseUrl,
+			route:                               ReadData,
+			endpointArgs:                        []interface{}{"database", "collection"},
+			expectedFormattedURL:                baseUrl + "/api/" + expectedDataEndpoints + "/data",
+			queryFormat:                         "key=%s&value=%s",
+			queryParams:                         []interface{}{"key", "value"},
+			expectedFormattedUrlWithQueryParams: baseUrl + "/api/" + expectedDataEndpoints + "/data" + "?key=key&value=value",
+		},
+		{
+			baseUrl:                             baseUrl,
+			route:                               DeleteData,
+			endpointArgs:                        []interface{}{"database", "collection"},
+			expectedFormattedURL:                baseUrl + "/api/" + expectedDataEndpoints + "/data",
+			queryFormat:                         "key=%s&value=%s",
+			queryParams:                         []interface{}{"key", "value"},
+			expectedFormattedUrlWithQueryParams: baseUrl + "/api/" + expectedDataEndpoints + "/data" + "?key=key&value=value",
+		},
+		{
+			baseUrl:                             baseUrl,
+			route:                               UpdateData,
+			endpointArgs:                        []interface{}{"database", "collection"},
+			expectedFormattedURL:                baseUrl + "/api/" + expectedDataEndpoints + "/data",
+			queryFormat:                         "key=%s&value=%s",
+			queryParams:                         []interface{}{"key", "value"},
+			expectedFormattedUrlWithQueryParams: baseUrl + "/api/" + expectedDataEndpoints + "/data" + "?key=key&value=value",
+		},
+	}
+
+	for _, tc := range testCases {
+		var formatResult, epWithQueryParam route
+
+		if len(tc.endpointArgs) == 0 || tc.endpointArgs == nil {
 			formatResult = tc.route.Format(tc.baseUrl)
 		} else {
 			formatResult = tc.route.Format(tc.baseUrl, tc.endpointArgs...)
 		}
 
-		assert.Equal(t, tc.expectedFormattedURL, formatResult)
+		epWithQueryParam = formatResult.AddQueryParams(tc.queryFormat, tc.queryParams...)
+
+		assert.Equal(t, tc.expectedFormattedURL, formatResult.String())
+		assert.Equal(t, tc.expectedFormattedUrlWithQueryParams, epWithQueryParam.String())
+
 	}
 
 }

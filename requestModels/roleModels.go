@@ -1,4 +1,4 @@
-package models
+package requestModels
 
 import wdbModels "github.com/TanmoySG/wunderDB/model"
 

@@ -6,6 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	wdbgo "github.com/TanmoySG/wdb-go"
+	dataFilters "github.com/TanmoySG/wdb-go/filters"
 	"github.com/TanmoySG/wdb-go/privileges"
 	"github.com/TanmoySG/wdb-go/schema"
 )
@@ -85,7 +86,7 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	} else {
-		log.Infof("Collections [ %s ]", db.Collections)
+		log.Infof("Collections [ %v ]", db.Collections)
 	}
 
 	err = wdb.DeleteDatabase("databadse")
@@ -114,17 +115,57 @@ func main() {
 		log.Infof("Schema : %s", coll.Schema)
 	}
 
-	err = wdb.DeleteCollection("test-database", "collection-1")
-	if err != nil {
-		log.Error(err)
-	} else {
-		log.Info("collection deleted")
+	// err = wdb.DeleteCollection("test-database", "collection-1")
+	// if err != nil {
+	// 	log.Error(err)
+	// } else {
+	// 	log.Info("collection deleted")
+	// }
+
+	// coll, err = wdb.GetCollection("test-database", "collection-1")
+	// if err != nil {
+	// 	log.Error(err)
+	// } else {
+	// 	log.Infof("Schema : %s", coll.Schema)
+	// }
+
+	data := map[string]interface{}{
+		"age": 19,
 	}
 
-	coll, err = wdb.GetCollection("test-database", "collection-1")
+	// err = wdb.AddData(data, "test-database", "collection-1")
+	// if err != nil {
+	// 	log.Error(err)
+	// } else {
+	// 	log.Infof("data inserted")
+	// }
+
+	f, err := dataFilters.GetFilter("age", 250)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = wdb.UpdateData(data, "test-database", "collection-1", *f)
 	if err != nil {
 		log.Error(err)
 	} else {
-		log.Infof("Schema : %s", coll.Schema)
+		log.Println("done")
 	}
+
+	err = wdb.UpdateData(data, "test-database", "collection-1", *f)
+	if err != nil {
+		log.Error(err)
+	} else {
+		log.Println("done")
+	}
+
+	// else {
+	// 	dmap, err := resp1.Minified().String()
+	// 	if err != nil {
+	// 		log.Error(err)
+	// 	} else {
+	// 		log.Infof("data got \n %s", dmap)
+	// 	}
+	// }
+
 }

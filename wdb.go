@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	dataFilters "github.com/TanmoySG/wdb-go/filters"
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/queries"
 	"github.com/TanmoySG/wdb-go/internal/routes"
@@ -36,6 +37,11 @@ type Client interface {
 	CreateCollection(databaseName, collectionName string, schema schema.CollectionSchema) error
 	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 	DeleteCollection(databaseName, collectionName string) error
+
+	AddData(data any, databaseName, collectionName string, args ...interface{}) error
+	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (dataRecords, error)
+	UpdateData(dataPatch any, databaseName, collectionName string, filters ...dataFilters.Filter) error
+	DeleteData(databaseName, collectionName string, filters ...dataFilters.Filter) error
 }
 
 type wdbClient struct {
@@ -50,18 +56,18 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, ConnectionURI string, projectId *string, args ...bool) (Client, error) {
+func NewWdbClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
-	ok := testConnection(routes.ApiPing.Format(ConnectionURI), args...)
+	ok := testConnection(routes.ApiPing.Format(connectionURI).String(), args...)
 	if !ok {
-		return nil, fmt.Errorf("error creating wdb-client: connection failed")
+		return nil, fmt.Errorf("error creating wdb-client: failed to establish connection with %s", connectionURI)
 	}
 
 	return wdbClient{
 		Username:      username,
 		Password:      password,
-		ConnectionURI: ConnectionURI,
+		ConnectionURI: connectionURI,
 		Metadata: wdbClientMetadata{
 			UserAgent: ua,
 		},
@@ -77,7 +83,7 @@ func createUserAgent(projectId *string) string {
 }
 
 func (wdb wdbClient) Ping() (bool, error) {
-	queryEndpoint := routes.ApiPing.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.ApiPing.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.ApiPing.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
@@ -99,7 +105,7 @@ func (wdb wdbClient) Ping() (bool, error) {
 
 func testConnection(url string, args ...bool) bool {
 	shouldCheck := !SkipConnectionCheck
-	
+
 	if len(args) != 0 {
 		shouldCheck = args[0]
 	}

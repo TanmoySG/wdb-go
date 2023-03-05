@@ -6,14 +6,14 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	"github.com/TanmoySG/wdb-go/models"
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
 func (wdb wdbClient) CreateDatabase(databaseName string) error {
-	queryEndpoint := routes.CreateDatabase.Format(wdb.ConnectionURI)
+	queryEndpoint := routes.CreateDatabase.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.CreateDatabase.String()
-	queryPayload := models.CreateDatabase{
+	queryPayload := requestModels.CreateDatabase{
 		Name: databaseName,
 	}
 
@@ -35,7 +35,7 @@ func (wdb wdbClient) CreateDatabase(databaseName string) error {
 }
 
 func (wdb wdbClient) GetDatabase(databaseName string) (*wdbModels.Database, error) {
-	queryEndpoint := routes.FetchDatabase.Format(wdb.ConnectionURI, databaseName)
+	queryEndpoint := routes.FetchDatabase.Format(wdb.ConnectionURI, databaseName).String()
 	queryMethod := methods.FetchDatabase.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)
@@ -67,7 +67,7 @@ func (wdb wdbClient) GetDatabase(databaseName string) (*wdbModels.Database, erro
 }
 
 func (wdb wdbClient) DeleteDatabase(databaseName string) error {
-	queryEndpoint := routes.DeleteDatabase.Format(wdb.ConnectionURI, databaseName)
+	queryEndpoint := routes.DeleteDatabase.Format(wdb.ConnectionURI, databaseName).String()
 	queryMethod := methods.DeleteDatabase.String()
 
 	_, queryResponse, err := wdb.QueryClient.Query(queryEndpoint, queryMethod, nil)

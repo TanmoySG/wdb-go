@@ -1,4 +1,4 @@
-package models
+package requestModels
 
 type CreateUser struct {
 	Username string `json:"username" xml:"username" form:"username"`
