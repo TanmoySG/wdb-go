@@ -86,7 +86,7 @@ func main() {
 	if err != nil {
 		log.Error(err)
 	} else {
-		log.Infof("Collections [ %s ]", db.Collections)
+		log.Infof("Collections [ %v ]", db.Collections)
 	}
 
 	err = wdb.DeleteDatabase("databadse")
@@ -158,7 +158,7 @@ func main() {
 	} else {
 		log.Println("done")
 	}
-	
+
 	// else {
 	// 	dmap, err := resp1.Minified().String()
 	// 	if err != nil {

@@ -40,7 +40,7 @@ type Client interface {
 
 	AddData(data any, databaseName, collectionName string, args ...interface{}) error
 	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (dataRecords, error)
-	UpdateData(dataPatch any, databaseName, collectionName string, filters ...dataFilters.Filter) error 
+	UpdateData(dataPatch any, databaseName, collectionName string, filters ...dataFilters.Filter) error
 	DeleteData(databaseName, collectionName string, filters ...dataFilters.Filter) error
 }
 
