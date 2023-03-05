@@ -6,9 +6,9 @@ import (
 
 	"github.com/TanmoySG/wdb-go/internal/methods"
 	"github.com/TanmoySG/wdb-go/internal/routes"
-	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	"github.com/TanmoySG/wdb-go/schema"
 
+	requestModels "github.com/TanmoySG/wdb-go/requestModels"
 	wdbModels "github.com/TanmoySG/wunderDB/model"
 )
 
