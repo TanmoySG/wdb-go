@@ -36,7 +36,7 @@ wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, nil, wdbgo.SkipConnecti
 
 To crete a user, use the `CreateUser()` function.
 ```go
-err := CreateUser(username, password)
+err := wdb.CreateUser(username, password)
 ```
 
 It returns error if no user was created, else returns nil error.
@@ -46,8 +46,16 @@ It returns error if no user was created, else returns nil error.
 To create a role, use `CreateRole()` method - passing the `name` of role to create, and the lists of Allowed and Denied Privileges. 
 
 ```go
-err := CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege)
+err := wdb.CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege)
 ```
+
+Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`, refer to this for [more](./README.md#sub-packages)
+
+## Sub Packages
+
+Subpackages in wdb-go are useful for development.
+
+### wdb-go/privileges
 
 Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`.
 
