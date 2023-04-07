@@ -18,9 +18,9 @@ Then in your go code, import it as
 import wdbgo "github.com/TanmoySG/wdb-go"
 ```
 
-Initialize a new wdb client using `NewWdbClient()` method passing the URL of wdb instance, username and password of the authenticating user.
+Initialize a new wdb client using `NewClient()` method passing the URL of wdb instance, username and password of the authenticating user.
 ```go
-wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, nil)
+wdb, err := wdbgo.NewClient(uname, pword, wdbAddress, nil)
 if err != nil {
  log.Fatal(err)
 }
@@ -30,4 +30,31 @@ You an also pass in a custom application name to be included as the user-agent. 
 
 ```go
 wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, nil, wdbgo.SkipConnectionCheck)
+```
+
+### Create User
+
+To crete a user, use the `CreateUser()` function.
+```go
+err := CreateUser(username, password)
+```
+
+It returns error if no user was created, else returns nil error.
+
+### Create Role
+
+To create a role, use `CreateRole()` method - passing the `name` of role to create, and the lists of Allowed and Denied Privileges. 
+
+```go
+err := CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege)
+```
+
+Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`.
+
+```go
+import privileges "github.com/TanmoySG/wdb-go/privileges"
+
+allowedPrivileges := []privileges.Privilege{
+    privileges.ReadDatabase,
+}
 ```
