@@ -56,7 +56,7 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
+func NewClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
 	ok := testConnection(routes.ApiPing.Format(connectionURI).String(), args...)

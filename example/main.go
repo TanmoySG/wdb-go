@@ -13,7 +13,7 @@ func main() {
 	wdbAddress := os.Getenv("WDB_URL")
 
 	// skip connection check by adding wdbgo.SkipConnectionCheck as argument
-	wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, &appName)
+	wdb, err := wdbgo.NewClient(uname, pword, wdbAddress, &appName)
 	if err != nil {
 		log.Fatal(err)
 	}
