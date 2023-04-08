@@ -19,6 +19,7 @@ import wdbgo "github.com/TanmoySG/wdb-go"
 ```
 
 Initialize a new wdb client using `NewClient()` method passing the URL of wdb instance, username and password of the authenticating user.
+
 ```go
 wdb, err := wdbgo.NewClient(uname, pword, wdbAddress, nil)
 if err != nil {
@@ -35,6 +36,7 @@ wdb, err := wdbgo.NewWdbClient(uname, pword, wdbAddress, nil, wdbgo.SkipConnecti
 ### Create User
 
 To crete a user, use the `CreateUser()` function.
+
 ```go
 err := wdb.CreateUser(username, password)
 ```
@@ -43,13 +45,97 @@ It returns error if no user was created, else returns nil error.
 
 ### Create Role
 
-To create a role, use `CreateRole()` method - passing the `name` of role to create, and the lists of Allowed and Denied Privileges. 
+To create a role, use `CreateRole()` method - passing the `name` of role to create, and the lists of Allowed and Denied Privileges.
 
 ```go
-err := wdb.CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege)
+err := wdb.CreateRole(roleName, allowedPrivileges, deniedPrivileges)
 ```
 
-Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`, refer to this for [more](./README.md#sub-packages)
+Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`, refer to [this for more](./README.md#sub-packages)
+
+### Grant Role
+
+Once user and role are created use the `GrantRole()` method to grant the role to the user - passing the username, role-name and database to grant the role on. In addition to the database, a role can also be granted on a collection by passing the collection name as the last argument, which is an option argument.
+
+```go
+// role granted on collection
+err := wdb.GrantRole(username, roleName, database, collection)
+
+// collection is an optional argument, role granted only on database
+err := wdb.GrantRole(username, roleName, database) 
+```
+
+The collection has to be a child of the database, if the role needs to be granted on the collection.
+
+### List Roles
+
+Use the `ListRoles()` method to list the roles in wunderdb. Returns map of roles and error.
+
+```go
+roles, err := wdb.ListRoles() 
+```
+
+### Create Database
+
+Create Databases using the `CreateDatabase()` function passing the name of the database to create.
+
+```go
+err := wdb.CreateDatabase(databaseName)
+```
+
+### Get Database
+
+Fetch database details using `GetDatabase()` method.
+
+```go
+databases, err := wdb.GetDatabase(databaseName)
+```
+
+Returns the database, of type [`*wdbModels.Database`](https://github.com/TanmoySG/wunderDB/blob/main/model/models.go#L29) or error, if any.
+
+### Delete Database
+
+Delete a Database using `DeleteDatabase()` method passing the database to delete.
+
+```go
+err := wdb.DeleteDatabase(databaseName)
+```
+
+Returns error, if any.
+
+### Create Collection
+
+Create Collections, in an existing Database, using the `CreateCollection()` function - passing the name of the database to create collection in, the name of the collection to create and the collection schema.
+
+```go
+err := wdb.CreateCollection(databaseName, collectionName, collectionSchema)
+```
+
+The collection schema passed is of type [`schema.CollectionSchema`](./schema/schema.go). Schemas can be loaded into your code using the methods available in the `schema` subpackage, read more [here]().
+
+### Get Collection
+
+Fetch Collection details, in a database, using `GetCollection()` method.
+
+```go
+collection, err := wdb.GetCollection(databaseName, collectionName)
+```
+
+Returns the collection, of type [`*wdbModels.Collection`](https://github.com/TanmoySG/wunderDB/blob/main/model/models.go#L35) or error, if any.
+
+### Delete Collection
+
+Delete a collection using `DeleteCollection()` method passing the collection to delete, and it's parent database.
+
+```go
+err := wdb.DeleteCollection(databaseName, collectionName)
+```
+
+Returns error, if any.
+
+### Add/Insert Data
+
+
 
 ## Sub Packages
 
@@ -57,7 +143,7 @@ Subpackages in wdb-go are useful for development.
 
 ### wdb-go/privileges
 
-Use the privileges available in the `github.com/TanmoySG/wdb-go/privileges` sub-package as `privileges.PrivilegeName`.
+Use the `privileges` object from the `wdb-go/privileges` sub-package to use the various wdb privileges available.
 
 ```go
 import privileges "github.com/TanmoySG/wdb-go/privileges"
