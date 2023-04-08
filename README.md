@@ -135,7 +135,45 @@ Returns error, if any.
 
 ### Add/Insert Data
 
+Insert Data in a Collection using the `AddData()` function passing the data to be inserted, followed by target database and collection name.
 
+```go
+err := wdb.AddData(data, databaseName, collectionName)
+```
+
+The `data` parameter is of type `interface` and can have any value. Data to insert must be schema validated. Returns error if any.
+
+### Read Data
+
+To read/fetch data from a Collection, use the `ReadData()` function passing the database and collection name.
+
+```go
+data, err := wdb.ReadData(databaseName, collectionName, filters)
+```
+
+The `filter` parameter is of type `dataFilters.Filter` and filters can be used to filter out data based on key-value. The methods in [`filters`](#wdb-gofilters) subpackage help in using filters in the host application.
+
+Read more about wunderDB filters [here](https://github.com/TanmoySG/wunderDB/blob/main/documentation/README.md#filters)
+
+### Update Data
+
+To update specific data from a Collection, use the `UpdateData()` function passing the updates to the data, database and collection name along with filters to specify the data to update.
+
+```go
+data, err := wdb.UpdateData(updatedFields, databaseName, collectionName, filters)
+```
+
+The updated data can be part or entire data object. The updated data must be schema validated.
+
+### Delete Data
+
+To delete specific data from a Collection, use the `DeleteData()` function passing the database and collection name along with filters to specify the data to delete.
+
+```go
+err := wdb.DeleteData(databaseName, collectionName, filters)
+```
+
+Returns error, if any.
 
 ## Sub Packages
 
@@ -151,4 +189,27 @@ import privileges "github.com/TanmoySG/wdb-go/privileges"
 allowedPrivileges := []privileges.Privilege{
     privileges.ReadDatabase,
 }
+```
+
+### wdb-go/filters
+
+Use the `filters` object from the `wdb-go/filters` sub-package to use the filters functionalities of wunderDB.
+
+```go
+import filters "github.com/TanmoySG/wdb-go/filters"
+
+filter, err := filters.GetFilter("field", "value")
+
+isFilterValid := filter.IsValid()
+```
+
+### wdb-go/schema
+
+Use the `schema` object from the `wdb-go/schema` sub-package to use the schema functionalities of wdg-go tool.
+
+```go
+import schema "github.com/TanmoySG/wdb-go/schema"
+
+// load schema from json file, passing filepath to JSON Schema file
+loadedCollectionSchema, err := schema.LoadSchemaFromFile(filepath) 
 ```
