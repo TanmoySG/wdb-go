@@ -60,17 +60,11 @@ func (wdb wdbClient) CreateUser(username, password string) error {
 	return fmt.Errorf(apiResponse.Error.Code)
 }
 
-func (wdb wdbClient) GrantRoles(username, role string, entities ...string) error {
+func (wdb wdbClient) GrantRole(username, role string, database string, collection ...string) error {
 	var targetDatabase, targetCollection *string
 
-	entitiesCount := len(entities)
-	if entitiesCount == 1 {
-		targetDatabase = &entities[0]
-	} else if entitiesCount == 2 {
-		targetCollection = &entities[1]
-	} else {
-		return fmt.Errorf("entities missing: database or collection")
-	}
+	targetDatabase = &database
+	targetCollection = &collection[0]
 
 	queryEndpoint := routes.GrantRoles.Format(wdb.ConnectionURI).String()
 	queryMethod := methods.GrantRoles.String()
