@@ -38,7 +38,7 @@ type Client interface {
 	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 	DeleteCollection(databaseName, collectionName string) error
 
-	AddData(data any, databaseName, collectionName string, args ...interface{}) error
+	AddData(data any, databaseName, collectionName string) error
 	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (dataRecords, error)
 	UpdateData(dataPatch any, databaseName, collectionName string, filters ...dataFilters.Filter) error
 	DeleteData(databaseName, collectionName string, filters ...dataFilters.Filter) error
