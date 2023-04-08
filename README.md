@@ -4,7 +4,7 @@ wdb-go is a Go Client library for wunderDB.
 
 ## Install
 
-To use wdb-go, install it using `go get`.
+To use wdb-go, install it using `go get`
 
 ```sh
 go get github.com/TanmoySG/wdb-go
@@ -111,7 +111,7 @@ Create Collections, in an existing Database, using the `CreateCollection()` func
 err := wdb.CreateCollection(databaseName, collectionName, collectionSchema)
 ```
 
-The collection schema passed is of type [`schema.CollectionSchema`](./schema/schema.go). Schemas can be loaded into your code using the methods available in the `schema` subpackage, read more [here]().
+The collection schema passed is of type [`schema.CollectionSchema`](./schema/schema.go). Schemas can be loaded into your code using the methods available in the `schema` subpackage, read more [here](#wdb-goschema).
 
 ### Get Collection
 
