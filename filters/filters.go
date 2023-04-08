@@ -1,4 +1,4 @@
-package dataFilters
+package filters
 
 import (
 	"fmt"
