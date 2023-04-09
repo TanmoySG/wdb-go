@@ -160,7 +160,7 @@ Read more about wunderDB filters [here](https://github.com/TanmoySG/wunderDB/blo
 To update specific data from a Collection, use the `UpdateData()` function passing the updates to the data, database and collection name along with filters to specify the data to update.
 
 ```go
-data, err := wdb.UpdateData(updatedFields, databaseName, collectionName, filters)
+err := wdb.UpdateData(updatedFields, databaseName, collectionName, filters)
 ```
 
 The updated data can be part or entire data object. The updated data must be schema validated.
