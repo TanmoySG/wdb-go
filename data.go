@@ -15,7 +15,7 @@ const dataKeyValueFilterFormat = "key=%s&value=%v"
 type dataRecords map[wdbModels.Identifier]*wdbModels.Datum
 type minifiedDataRecords map[string]interface{}
 
-func (wdb wdbClient) AddData(data any, databaseName, collectionName string, args ...interface{}) error {
+func (wdb wdbClient) AddData(data any, databaseName, collectionName string) error {
 	queryEndpoint := routes.AddData.Format(wdb.ConnectionURI, databaseName, collectionName).String()
 	queryMethod := methods.AddData.String()
 	queryPayload := data

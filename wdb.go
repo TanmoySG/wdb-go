@@ -27,7 +27,7 @@ type Client interface {
 	CreateUser(username, password string) error
 
 	CreateRole(roleName string, allowedPrivileges, deniedPrivileges []privileges.Privilege) error
-	GrantRoles(username, role string, entities ...string) error
+	GrantRole(username, role string, database string, collection ...string) error
 	ListRoles() (map[string]wdbModels.Role, error)
 
 	CreateDatabase(databaseName string) error
@@ -38,7 +38,7 @@ type Client interface {
 	GetCollection(databaseName, collectionName string) (*wdbModels.Collection, error)
 	DeleteCollection(databaseName, collectionName string) error
 
-	AddData(data any, databaseName, collectionName string, args ...interface{}) error
+	AddData(data any, databaseName, collectionName string) error
 	ReadData(databaseName, collectionName string, filters ...dataFilters.Filter) (dataRecords, error)
 	UpdateData(dataPatch any, databaseName, collectionName string, filters ...dataFilters.Filter) error
 	DeleteData(databaseName, collectionName string, filters ...dataFilters.Filter) error
@@ -56,7 +56,7 @@ type wdbClientMetadata struct {
 	UserAgent string
 }
 
-func NewWdbClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
+func NewClient(username, password, connectionURI string, projectId *string, args ...bool) (Client, error) {
 	ua := createUserAgent(projectId)
 
 	ok := testConnection(routes.ApiPing.Format(connectionURI).String(), args...)
