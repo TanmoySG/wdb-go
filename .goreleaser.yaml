@@ -5,7 +5,7 @@ release:
   header: |
     wdb-go v{{ .Tag }} : Go Client Library for wunderDB
   footer: |
-    **Full Changelog**: https://github.com/goreleaser/goreleaser/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/TanmoySG/wdb-go/compare/{{ .PreviousTag }}...{{ .Tag }}
   github:
     owner: TanmoySG
     name: wdb-go
